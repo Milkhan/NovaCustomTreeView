@@ -9,17 +9,17 @@
             </div>
         </div>
         <div class="card mb-6 py-3 px-6">
-            <div class="flex border-b border-40">
+            <!-- <div class="flex border-b border-40">
                 <div class="w-1/4 py-4">
                     <h4 class="font-normal text-80">Id</h4>
                 </div>
                 <div class="w-3/4 py-4 break-words">
                     <p class="text-90">{{ node.id }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="flex border-b border-40">
                 <div class="w-1/4 py-4">
-                    <h4 class="font-normal text-80">Title</h4>
+                    <h4 class="font-normal text-80">Name</h4>
                 </div>
                 <div class="w-3/4 py-4 break-words">
                     <p class="text-90">{{ node.text }}</p>

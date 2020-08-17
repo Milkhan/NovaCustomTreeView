@@ -1369,23 +1369,13 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
                   _c("p", { staticClass: "text-90" }, [
-                    _vm._v(_vm._s(_vm.node.id))
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
-                  _c("p", { staticClass: "text-90" }, [
                     _vm._v(_vm._s(_vm.node.text))
                   ])
                 ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(2),
+                _vm._m(1),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -1399,7 +1389,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(3),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
                   _c("p", { staticClass: "text-90" }, [
@@ -1454,15 +1444,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "w-1/4 py-4" }, [
-      _c("h4", { staticClass: "font-normal text-80" }, [_vm._v("Id")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "w-1/4 py-4" }, [
-      _c("h4", { staticClass: "font-normal text-80" }, [_vm._v("Title")])
+      _c("h4", { staticClass: "font-normal text-80" }, [_vm._v("Name")])
     ])
   },
   function() {
