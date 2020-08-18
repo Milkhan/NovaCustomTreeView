@@ -3,10 +3,13 @@
         <div class="flex">
                 <v-jstree
                     :data="tree"
-                    :draggable="true"
+                    :draggable="false"
                     whole-row
                     @item-drop="dragEnded"
                     @item-click="itemClick"
+                    :multiple="false"
+                    :collapse="true"
+
                 ></v-jstree>
                 <TreeDetails v-if="currentNode" :resource="resource" :node="currentNode" @onOrder="orderNode" @onDelete="deleteNode" @onToggle="toggleNode" />
         </div>
@@ -32,21 +35,27 @@ export default {
             const tree = {}
             const map = {}
             if (!rows) return
+            // console.log(rows)
             rows.forEach(row => {
+                // console.log(row)
                     let leaf = map[row.id.value] = {
                         id: row.id.value,
-                        text: this.attrValue(row, 'title'),
+                        text: this.attrValue(row, 'name'),
                         is_active: this.attrValue(row, 'is_active'),
                         icon: this.isActiveIcon(true, true),
                         order: this.attrValue(row, 'order'),
+                        score: this.attrValue(row, 'score'),
                         parentText: this.attrValue(row, 'parent'),
                         parentId: this.attrValue(row, 'parent', 'belongsToId'),
+                        selected:false,
                         children: [],
                         opened: true,
                     }
                 });
             rows.forEach(row => {
                 let leaf = map[row.id.value]
+                // console.log(leaf)
+                // console.log(leaf.parentId)
                 if (leaf.parentId) {
                     if (map[leaf.parentId]) {
                         let parent = map[leaf.parentId]
@@ -65,10 +74,16 @@ export default {
             return field && field[prop]
         },
         itemClick (node) {
+            // console.log('tiklandi')
+            // console.log('node.model', node.model)
             this.currentNode = node.model
         },
         dragEnded(node, item, draggedItem, e) {
-            console.log(node, item, draggedItem, e)
+            // console.log( 'node')
+            // console.log( node)
+            // console.log( item)
+            // console.log( 'draggedItem', draggedItem)
+            // console.log(  e)
             this.updateParent(draggedItem, item)
         },
         formData(node, fields, method) {
@@ -91,11 +106,14 @@ export default {
             })
         },
         updateParent(node, newParent) {
+
             const oldParent = node.parentId && this.parents[node.parentId]
+            // console.log('newParent.id', newParent.id);
             return this.updateNode(node, {
                 order: 0,
                 parent: newParent.id
             }).catch(err => {
+                // console.log('err', err)
                 newParent.children.splice(newParent.children.indexOf(node), 1)
                 if (oldParent) {
                     oldParent.children.push(node)
@@ -108,10 +126,11 @@ export default {
             Nova.request().get(`/nova-api/${this.resource}`)
                 .then(res => {
                     this.currentNode = null
+                    // console.log('res.data', res.data)
                     this.parseResources(res.data.resources)
                     this.updateRetrievedAt()
                 }).catch(err => {
-                    console.error(err)
+                    // console.error(err)
                     this.$router.replace('/404')
                 }).then(() => this.loading = false);
         },
@@ -131,7 +150,7 @@ export default {
             this.lastRetrievedAt = Math.floor(Date.now() / 1000)
         },
         deleteNode() {
-            Nova.request().post(`/nova-api/${this.resource}`, this.formData(this.currentNode, {
+            Nova.request().post(`/nova-api/${this.resource}`, this.formData(1,this.currentNode, {
                 resources: this.currentNode.id,
             }, "DELETE"))
                 .then(res => {
@@ -139,9 +158,17 @@ export default {
                     parent.children.splice(parent.children.indexOf(this.currentNode), 1)
                     this.currentNode = null
                 })
-                .catch()
+                .catch(err => {
+                 console.error(err)
+                  let parent = this.parents[this.currentNode.parentId]
+                    parent.children.splice(parent.children.indexOf(this.currentNode), 1)
+                    this.currentNode = null
+                // node.is_active = activeState
+                // this.$toasted.show('Failed toggling resource!', { type: 'error' })
+            })
         },
         toggleNode() {
+            // console.log('toggle')
             const node = this.currentNode
             const activeState = node.is_active
             node.is_active = 'loading'
@@ -149,13 +176,15 @@ export default {
             this.updateNode(node, {
                 is_active: !activeState ? 1 : 0
             }).catch(err => {
-                console.error(err)
+                // console.error(err)
                 node.is_active = activeState
                 this.$toasted.show('Failed toggling resource!', { type: 'error' })
             })
         },
         orderNode(dir) {
             const node = this.currentNode
+            // console.log('node', node)
+            // console.log('dir', dir)
             let order = ((node.order*1) || 0) + dir
             if (order < 0) order = 0
             if (node.parentId && this.parents[node.parentId].children) {
@@ -163,6 +192,7 @@ export default {
                 if (order > cLen)
                     order = cLen
             }
+            // console.log('order', order)
             this.updateNode(node, {
                 order
             }).catch(err => {
@@ -210,10 +240,10 @@ button:focus {
     border-radius: 100px;
     box-shadow: 0 0 0 4px white inset;
     &.enabled {
-        background: green;
+        background: #252D37;
     }
     &.disabled {
-        background: red;
+        background: #7b8ca3;
     }
     &.parentDisabled {
         background: orange;
