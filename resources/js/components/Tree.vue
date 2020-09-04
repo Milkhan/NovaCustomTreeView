@@ -62,7 +62,7 @@ export default {
           parentId: row.parent_id,
           selected: false,
           children: [],
-          opened: true,
+          opened: false,
           size: "small",
         };
         // console.log('leaf', leaf)
