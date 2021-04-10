@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 | by your tool's "Authorize" middleware by default. Now, go build!
 |
 */
+Route::any('/get-resource', \Day4\TreeView\Http\Controllers\ResourceGeneratorController::class.'@getResource');
 
 // Route::get('/endpoint', function (Request $request) {
 //     //
