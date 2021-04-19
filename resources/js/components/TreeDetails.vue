@@ -45,7 +45,7 @@
                     <p class="text-90">{{ node.score }}</p>
                 </div>
             </div>
-             <router-link :to="`/resources/${resource}/new?viaResource=skills&viaResourceId=${node.id}&viaRelationship=children`" class="capitalize btn btn-default btn-primary" dusk="create-button">
+             <router-link :to="`/resources/${resource}/new?viaResource=skills&viaResourceId=${node.id}&viaRelationship=children`"  v-if="!node.parentId" class="capitalize btn btn-default btn-primary" dusk="create-button">
                         Create Skill Under This Skill
                     </router-link>
             <!-- <div class="flex border-b border-40">
