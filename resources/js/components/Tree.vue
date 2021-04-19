@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     parseResources(rows) {
-      console.log(`rows`, rows);
+    //   console.log(`rows`, rows);
       const tree = [];
       const map = {};
       if (!rows) return;
@@ -132,9 +132,9 @@ export default {
       // Request URL: https://acme.martialup.com/nova-api/skills/14?viaResource=&viaResourceId=&viaRelationship=&editing=true&editMode=update
       // Request URL: https://acme.martialup.com/nova-api/skills/18?viaResource=&viaResourceId=&viaRelationship=&editing=true&editMode=update
 
-      console.log(`node`, node);
-      console.log(`fields`, fields);
-      console.log(`fields`, fields["order"]);
+    //   console.log(`node`, node);
+    //   console.log(`fields`, fields);
+    //   console.log(`fields`, fields["order"]);
       const newObj = {
         id: node.id,
         score: node.score,
@@ -144,7 +144,7 @@ export default {
         order: fields["order"],
         order: fields["order"],
       };
-      console.log(`newObj`, newObj);
+    //   console.log(`newObj`, newObj);
       return Nova.request()
         .post(
           `/nova-api/${this.resource}/${node.id}?viaResource=&viaResourceId=&viaRelationship=&editing=true&editMode=update`,
@@ -246,32 +246,32 @@ export default {
     },
     orderNode(dir) {
       const node = this.currentNode;
-      console.log("node", node);
-      console.log("dir", dir);
+    //   console.log("node", node);
+    //   console.log("dir", dir);
       let order = (node.order * 1 || 0) + dir;
       if (order < 0) order = 0;
       if (node.parentId && this.parents[node.parentId].children) {
         const cLen = this.parents[node.parentId].children.length;
         if (order > cLen) order = cLen;
       }
-      console.log("order", order);
+    //   console.log("order", order);
       this.updateNode(node, {
         order: order,
       }).catch((err) => {
-        console.log(`err`, err);
+        // console.log(`err`, err);
         this.$toasted.show("Failed changing order", { type: "error" });
       });
     },
     mergeResponse(res) {
       if (res.id && res.resource) {
-        console.log(`res.parent_id`, res.parent_id);
+        // console.log(`res.parent_id`, res.parent_id);
         if (res.parent_id === undefined) {
-          console.log(`res.resource`, res.resource);
+        //   console.log(`res.resource`, res.resource);
           const { id, parent_id, name, order, is_active } = res.resource;
-          console.log(`name`, name)
+        //   console.log(`name`, name)
           const node = this.tree.find((tr)=>tr.id==id);
           // const parent = this.parents[parent_id]
-          console.log(`parentasdasdadadsdas`, node);
+        //   console.log(`parentasdasdadadsdas`, node);
           // node.parentText = parent? parent.name: null;
           // node.parentId = parent_id
           node.text = name;
@@ -284,11 +284,11 @@ export default {
           this.updateRetrievedAt();
           this.tree.sort((a, b) => a.order - b.order);
         } else {
-          console.log(`res.resource`, res.resource);
+        //   console.log(`res.resource`, res.resource);
           const { id, parent_id, name, order, is_active } = res.resource;
           const node = this.parents[id];
           const parent = this.parents[parent_id];
-          console.log(`parent`, parent);
+        //   console.log(`parent`, parent);
           node.parentText = parent ? parent.name : null;
           node.parentId = parent_id;
           node.text = name;
@@ -296,7 +296,7 @@ export default {
           node.icon = parent
             ? this.isActiveIcon(is_active, parent.icon === "enabled")
             : null;
-          console.log(`order`, order);
+        //   console.log(`order`, order);
           node.order = parseInt(order);
           this.order(parent.children);
           this.setIconState(node.children, node.icon === "enabled");
