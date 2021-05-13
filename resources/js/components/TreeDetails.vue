@@ -45,9 +45,21 @@
                     <p class="text-90">{{ node.score }}</p>
                 </div>
             </div>
-             <router-link :to="`/resources/${resource}/new?viaResource=skills&viaResourceId=${node.id}&viaRelationship=children`"  v-if="!node.parentId" class="capitalize btn btn-default btn-primary" dusk="create-button">
+            <div class="flex border-b border-40">
+
+             <router-link :to="`/resources/${resource}/new?viaResource=skills&viaResourceId=${node.id}&viaRelationship=children`"
+
+             class="capitalize btn btn-default btn-primary" dusk="create-button">
                         Create Skill Under This Skill
                     </router-link>
+                    <!-- v-if="!node.parentId"  -->
+             <router-link :to="`/resources/${resource}/${node.id}`"
+
+             class="capitalize btn btn-default btn-secondary" dusk="create-button">
+                        See in detail view
+                    </router-link>
+            </div>
+                    <!-- v-if="!node.parentId"  -->
             <!-- <div class="flex border-b border-40">
                 <div class="w-1/4 py-4">
                     <h4 class="font-normal text-80">Active</h4>

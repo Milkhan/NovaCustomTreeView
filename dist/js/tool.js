@@ -1438,6 +1438,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['node', 'resource'],
@@ -1584,99 +1596,114 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card mb-6 py-3 px-6" },
-            [
-              _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
-                  _c("p", { staticClass: "text-90" }, [
-                    _vm._v(_vm._s(_vm.node.text))
-                  ])
-                ])
-              ]),
+          _c("div", { staticClass: "card mb-6 py-3 px-6" }, [
+            _c("div", { staticClass: "flex border-b border-40" }, [
+              _vm._m(0),
               _vm._v(" "),
-              _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(1),
+              _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
+                _c("p", { staticClass: "text-90" }, [
+                  _vm._v(_vm._s(_vm.node.text))
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex border-b border-40" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-3/4 py-4 break-words flex align-center" },
+                [
+                  _c("p", { staticClass: "text-90" }, [
+                    _vm._v(_vm._s(_vm.node.order))
+                  ]),
+                  _vm._v(" "),
+                  _vm.node.order > 0
+                    ? _c(
+                        "button",
+                        {
+                          staticClass:
+                            "btn px-2 rounded inline-block ml-2 border",
+                          on: {
+                            click: function($event) {
+                              return _vm.$emit("onOrder", -1)
+                            }
+                          }
+                        },
+                        [_vm._v("↥")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn px-2 rounded inline-block ml-2 border",
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("onOrder", 1)
+                        }
+                      }
+                    },
+                    [_vm._v("↧")]
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex border-b border-40" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
+                _c("p", { staticClass: "text-90" }, [
+                  _vm._v(_vm._s(_vm.node.score))
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex border-b border-40" },
+              [
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "capitalize btn btn-default btn-primary",
+                    attrs: {
+                      to:
+                        "/resources/" +
+                        _vm.resource +
+                        "/new?viaResource=skills&viaResourceId=" +
+                        _vm.node.id +
+                        "&viaRelationship=children",
+                      dusk: "create-button"
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    Create Skill Under This Skill\n                "
+                    )
+                  ]
+                ),
                 _vm._v(" "),
                 _c(
-                  "div",
-                  { staticClass: "w-3/4 py-4 break-words flex align-center" },
+                  "router-link",
+                  {
+                    staticClass: "capitalize btn btn-default btn-secondary",
+                    attrs: {
+                      to: "/resources/" + _vm.resource + "/" + _vm.node.id,
+                      dusk: "create-button"
+                    }
+                  },
                   [
-                    _c("p", { staticClass: "text-90" }, [
-                      _vm._v(_vm._s(_vm.node.order))
-                    ]),
-                    _vm._v(" "),
-                    _vm.node.order > 0
-                      ? _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn px-2 rounded inline-block ml-2 border",
-                            on: {
-                              click: function($event) {
-                                return _vm.$emit("onOrder", -1)
-                              }
-                            }
-                          },
-                          [_vm._v("↥")]
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "btn px-2 rounded inline-block ml-2 border",
-                        on: {
-                          click: function($event) {
-                            return _vm.$emit("onOrder", 1)
-                          }
-                        }
-                      },
-                      [_vm._v("↧")]
+                    _vm._v(
+                      "\n                    See in detail view\n                "
                     )
                   ]
                 )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex border-b border-40" }, [
-                _vm._m(2),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-3/4 py-4 break-words" }, [
-                  _c("p", { staticClass: "text-90" }, [
-                    _vm._v(_vm._s(_vm.node.score))
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              !_vm.node.parentId
-                ? _c(
-                    "router-link",
-                    {
-                      staticClass: "capitalize btn btn-default btn-primary",
-                      attrs: {
-                        to:
-                          "/resources/" +
-                          _vm.resource +
-                          "/new?viaResource=skills&viaResourceId=" +
-                          _vm.node.id +
-                          "&viaRelationship=children",
-                        dusk: "create-button"
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                    Create Skill Under This Skill\n                "
-                      )
-                    ]
-                  )
-                : _vm._e()
-            ],
-            1
-          ),
+              ],
+              1
+            )
+          ]),
           _vm._v(" "),
           _vm.showModal
             ? _c("delete-resource-modal", {
