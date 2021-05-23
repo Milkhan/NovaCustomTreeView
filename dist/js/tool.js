@@ -914,7 +914,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     parseResources: function parseResources(rows) {
       var _this = this;
 
-      //   console.log(`rows`, rows);
+      console.log("rows", rows);
       var tree = [];
       var map = {};
       if (!rows) return;
@@ -1155,8 +1155,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     orderNode: function orderNode(dir) {
-      var _this8 = this;
-
       var node = this.currentNode;
       //   console.log("node", node);
       //   console.log("dir", dir);
@@ -1166,18 +1164,73 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var cLen = this.parents[node.parentId].children.length;
         if (order > cLen) order = cLen;
       }
-      //   console.log("order", order);
+      console.log("order", order);
+      console.log("node.parentId", node.parentId);
+      console.log("this.parents", this.parents);
+      console.log("this.parents[node.parentId]", this.parents[node.parentId]);
+      // console.log(
+      //   "this.parents[node.parentId].children",
+      //   this.parents[node.parentId].children
+      // );
       this.updateNode(node, {
         order: order
       }).catch(function (err) {
-        // console.log(`err`, err);
-        _this8.$toasted.show("Failed changing order", { type: "error" });
+        console.log("err", err);
+        // this.$toasted.show("Failed changing order", { type: "error" });
       });
     },
     mergeResponse: function mergeResponse(res) {
+      var _this8 = this;
+
       var isParent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      //   console.log(`isParent`, isParent);
+      console.log("mergeResponse isParent", isParent);
+      var findDeep = function findDeep(data, id) {
+        return data.find(function (e) {
+          if (e.id === id) {
+            console.log("e.id=== id", e.id === id, e.id, id, e);
+            if (e && e.children) {
+              var _iteratorNormalCompletion2 = true;
+              var _didIteratorError2 = false;
+              var _iteratorError2 = undefined;
+
+              try {
+                for (var _iterator2 = Object.entries(e.children)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                  var _ref3 = _step2.value;
+
+                  var _ref4 = _slicedToArray(_ref3, 2);
+
+                  var key = _ref4[0];
+                  var value = _ref4[1];
+
+                  if (value.id === id) {
+                    console.log("value", value);
+                    //   Vue.delete(this.tree, key);
+                    value.order = parseInt(order);
+                  }
+                }
+              } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                  }
+                } finally {
+                  if (_didIteratorError2) {
+                    throw _iteratorError2;
+                  }
+                }
+              }
+            }
+            return e;
+          } else if (e.children) {
+            return findDeep(e.children, id);
+          }
+        });
+      };
+
       if (res.id && res.resource) {
         // console.log(`res.resource.parent_id`, res.resource.parent_id);
         // console.log(`res.parent_id`, res.parent_id);
@@ -1188,7 +1241,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               id = _res$resource.id,
               parent_id = _res$resource.parent_id,
               name = _res$resource.name,
-              order = _res$resource.order,
+              _order = _res$resource.order,
               is_active = _res$resource.is_active;
           //   console.log(`name`, name)
 
@@ -1203,7 +1256,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           node.is_active = is_active;
           node.icon = "enabled";
           // console.log(`order`, order)
-          node.order = parseInt(order);
+          node.order = parseInt(_order);
           //   this.order(tree);
           this.setIconState("enabled");
           this.updateRetrievedAt();
@@ -1211,7 +1264,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             return a.order - b.order;
           });
         } else {
-          //   console.log(`res.resource`, res.resource);
+          console.log("res.resource", res.resource);
           //   console.log(`this.parents`, this.parents)
           //   const { id, parent_id, name, order, is_active } = res.resource;
           //   const node = this.parents[id];
@@ -1235,63 +1288,74 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _id = _res$resource2.id,
               _parent_id = _res$resource2.parent_id,
               _name = _res$resource2.name,
-              _order = _res$resource2.order,
+              _order2 = _res$resource2.order,
               _is_active = _res$resource2.is_active;
 
           var _node = this.parents[_id];
-          var node2Parent = this.tree.find(function (tr) {
-            return tr.id === _parent_id;
-          });
-          //   console.log(`node2Parent`, typeof node2Parent, node2Parent);
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          // const node2Parent = this.tree.find((tr) => tr.id === parent_id);
+          var node2Parent = findDeep(this.tree, _parent_id);
 
-          try {
-            for (var _iterator2 = Object.entries(node2Parent.children)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var _ref3 = _step2.value;
+          //   const node2 = node2Parent.forEach((no) => console.log(`no`, no));
+          //   console.log(`node2Parent`, node2Parent);
+          // const node2=
 
-              var _ref4 = _slicedToArray(_ref3, 2);
+          setTimeout(function () {
+            // console.log(
+            //   `node2Parent`,
+            //   parent_id,
+            //   typeof node2Parent,
+            //   node2Parent
+            // );
 
-              var key = _ref4[0];
-              var value = _ref4[1];
+            var parent = _this8.parents[_parent_id];
+            if (parent && parent.children) {
+              var _iteratorNormalCompletion3 = true;
+              var _didIteratorError3 = false;
+              var _iteratorError3 = undefined;
 
-              if (value.id === _id) {
-                //   console.log(`value`, value);
-                //   Vue.delete(this.tree, key);
-                value.order = parseInt(_order);
+              try {
+                for (var _iterator3 = Object.entries(parent.children)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                  var _ref5 = _step3.value;
+
+                  var _ref6 = _slicedToArray(_ref5, 2);
+
+                  var key = _ref6[0];
+                  var value = _ref6[1];
+
+                  if (value.id === _id) {
+                    console.log("value", value);
+                    //   Vue.delete(this.tree, key);
+                    value.order = parseInt(_order2);
+                  }
+                }
+              } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                    _iterator3.return();
+                  }
+                } finally {
+                  if (_didIteratorError3) {
+                    throw _iteratorError3;
+                  }
+                }
               }
             }
-            //   const node2 = node2Parent.forEach((no) => console.log(`no`, no));
-            //   console.log(`node2Parent`, node2Parent);
-            // const node2=
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
-          }
-
-          var parent = this.parents[_parent_id];
-          _node.parentText = parent.text;
-          _node.parentId = _parent_id;
-          _node.text = _name;
-          _node.is_active = _is_active;
-          _node.icon = this.isActiveIcon(_is_active, parent.icon === "enabled");
-          //   console.log(`order`, order);
-          _node.order = parseInt(_order);
-          //   console.log(`this`, this);
-          this.order(parent.children);
-          this.setIconState(_node.children, _node.icon === "enabled");
-          this.updateRetrievedAt();
+            console.log("parent", parent);
+            _node.parentText = parent.text;
+            _node.parentId = _parent_id;
+            _node.text = _name;
+            _node.is_active = _is_active;
+            _node.icon = _this8.isActiveIcon(_is_active, parent.icon === "enabled");
+            //   console.log(`order`, order);
+            _node.order = parseInt(_order2);
+            //   console.log(`this`, this);
+            _this8.order(parent.children);
+            _this8.setIconState(_node.children, _node.icon === "enabled");
+            _this8.updateRetrievedAt();
+          }, 100);
         }
       }
     }

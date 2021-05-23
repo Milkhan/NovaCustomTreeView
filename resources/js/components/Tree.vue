@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     parseResources(rows) {
-      //   console.log(`rows`, rows);
+      console.log(`rows`, rows);
       const tree = [];
       const map = {};
       if (!rows) return;
@@ -83,7 +83,7 @@ export default {
         // this.order(tree)
       });
       tree.sort((a, b) => a.order - b.order);
-    //   console.log(`tree`, typeof tree, tree);
+      //   console.log(`tree`, typeof tree, tree);
       // const treeSorted = Object.keys(tree).sort((a,b)=>{ a.order-b.order})
       // console.log(`treeSorted`, treeSorted)
       // var treeSorted = tree.slice(0);
@@ -144,7 +144,7 @@ export default {
         order: fields["order"],
         order: fields["order"],
       };
-    //   console.log(`node.parentId`, node.parentId);
+      //   console.log(`node.parentId`, node.parentId);
       //   console.log(`newObj`, newObj);
       return Nova.request()
         .post(
@@ -152,7 +152,7 @@ export default {
           this.formData(1, newObj, "PUT")
         )
         .then((res) => {
-        //   console.log(`res.data`, res.data);
+          //   console.log(`res.data`, res.data);
           this.mergeResponse(res.data, node.parentId);
         });
     },
@@ -248,24 +248,51 @@ export default {
     },
     orderNode(dir) {
       const node = this.currentNode;
-    //   console.log("node", node);
-    //   console.log("dir", dir);
+      //   console.log("node", node);
+      //   console.log("dir", dir);
       let order = (node.order * 1 || 0) + dir;
       if (order < 0) order = 0;
       if (node.parentId && this.parents[node.parentId].children) {
         const cLen = this.parents[node.parentId].children.length;
         if (order > cLen) order = cLen;
       }
-    //   console.log("order", order);
+      console.log("order", order);
+      console.log("node.parentId", node.parentId);
+      console.log("this.parents", this.parents);
+      console.log("this.parents[node.parentId]", this.parents[node.parentId]);
+      // console.log(
+      //   "this.parents[node.parentId].children",
+      //   this.parents[node.parentId].children
+      // );
       this.updateNode(node, {
         order: order,
       }).catch((err) => {
-        // console.log(`err`, err);
-        this.$toasted.show("Failed changing order", { type: "error" });
+        console.log(`err`, err);
+        // this.$toasted.show("Failed changing order", { type: "error" });
       });
     },
     mergeResponse(res, isParent = true) {
-    //   console.log(`isParent`, isParent);
+      console.log(`mergeResponse isParent`, isParent);
+      const findDeep = (data, id) => {
+        return data.find((e) => {
+          if (e.id === id) {
+            console.log("e.id=== id", e.id === id, e.id, id, e);
+            if (e && e.children) {
+              for (const [key, value] of Object.entries(e.children)) {
+                if (value.id === id) {
+                  console.log(`value`, value);
+                  //   Vue.delete(this.tree, key);
+                  value.order = parseInt(order);
+                }
+              }
+            }
+            return e;
+          } else if (e.children) {
+            return findDeep(e.children, id);
+          }
+        });
+      };
+
       if (res.id && res.resource) {
         // console.log(`res.resource.parent_id`, res.resource.parent_id);
         // console.log(`res.parent_id`, res.parent_id);
@@ -276,7 +303,7 @@ export default {
           //   console.log(`name`, name)
           const node = this.tree.find((tr) => tr.id == id);
           // const parent = this.parents[parent_id]
-        //   console.log(`parentas00000`, node);
+          //   console.log(`parentas00000`, node);
           // node.parentText = parent? parent.name: null;
           // node.parentId = parent_id
           node.text = name;
@@ -289,7 +316,7 @@ export default {
           this.updateRetrievedAt();
           this.tree.sort((a, b) => a.order - b.order);
         } else {
-          //   console.log(`res.resource`, res.resource);
+          console.log(`res.resource`, res.resource);
           //   console.log(`this.parents`, this.parents)
           //   const { id, parent_id, name, order, is_active } = res.resource;
           //   const node = this.parents[id];
@@ -308,33 +335,47 @@ export default {
           //   this.setIconState(node.children, node.icon === "enabled");
           //   this.updateRetrievedAt();
           //   this.order(parent.children);
-        //   console.log(`res.resource`, res.resource);
+          //   console.log(`res.resource`, res.resource);
           const { id, parent_id, name, order, is_active } = res.resource;
           const node = this.parents[id];
-          const node2Parent = this.tree.find((tr) => tr.id === parent_id);
-        //   console.log(`node2Parent`, typeof node2Parent, node2Parent);
-          for (const [key, value] of Object.entries(node2Parent.children)) {
-            if (value.id === id) {
-            //   console.log(`value`, value);
-              //   Vue.delete(this.tree, key);
-              value.order = parseInt(order);
-            }
-          }
+          // const node2Parent = this.tree.find((tr) => tr.id === parent_id);
+          const node2Parent = findDeep(this.tree, parent_id);
+
           //   const node2 = node2Parent.forEach((no) => console.log(`no`, no));
-        //   console.log(`node2Parent`, node2Parent);
+          //   console.log(`node2Parent`, node2Parent);
           // const node2=
-          const parent = this.parents[parent_id];
-          node.parentText = parent.text;
-          node.parentId = parent_id;
-          node.text = name;
-          node.is_active = is_active;
-          node.icon = this.isActiveIcon(is_active, parent.icon === "enabled");
-        //   console.log(`order`, order);
-          node.order = parseInt(order);
-        //   console.log(`this`, this);
-          this.order(parent.children);
-          this.setIconState(node.children, node.icon === "enabled");
-          this.updateRetrievedAt();
+
+          setTimeout(() => {
+            // console.log(
+            //   `node2Parent`,
+            //   parent_id,
+            //   typeof node2Parent,
+            //   node2Parent
+            // );
+
+            const parent = this.parents[parent_id];
+            if (parent && parent.children) {
+              for (const [key, value] of Object.entries(parent.children)) {
+                if (value.id === id) {
+                  console.log(`value`, value);
+                  //   Vue.delete(this.tree, key);
+                  value.order = parseInt(order);
+                }
+              }
+            }
+            console.log("parent", parent);
+            node.parentText = parent.text;
+            node.parentId = parent_id;
+            node.text = name;
+            node.is_active = is_active;
+            node.icon = this.isActiveIcon(is_active, parent.icon === "enabled");
+            //   console.log(`order`, order);
+            node.order = parseInt(order);
+            //   console.log(`this`, this);
+            this.order(parent.children);
+            this.setIconState(node.children, node.icon === "enabled");
+            this.updateRetrievedAt();
+          }, 100);
         }
       }
     },
